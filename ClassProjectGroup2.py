@@ -87,7 +87,7 @@ def Question1():
 	print("The month with most accidents was december with: "), print (max_month)
 
 # reads file
-data = pd.read_csv("US_Accidents_data.csv", index_col=0)
+data = pd.read_csv("test_data.csv", index_col=0)
 # removes rows with specific missing data
 validData = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
 
