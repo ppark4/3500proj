@@ -61,6 +61,11 @@ def Question1():
 
 	print('The month with most accidents was: ')
 	print(full_month_name)
+
+	# Return data to the original format since an extra
+	# column was added ("month") to isolate the month
+	# and answer the question
+	data.drop("month", axis=1, inplace=True)
 	
 
 
@@ -95,6 +100,8 @@ print(data)
 
 # print(delta)
 Question1()
+
+#print(data)
 
 
 
