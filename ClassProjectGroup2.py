@@ -66,6 +66,26 @@ def Question1():
 	# column was added ("month") to isolate the month
 	# and answer the question
 	data.drop("month", axis=1, inplace=True)
+
+def Question2():
+
+	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
+
+	
+	#Dataframe with only the year 2020
+	data_2020 = data[data['year'] == 2020]
+
+	state_most_accidents = data_2020['State'].value_counts().idxmax()
+	#print (data_2020)
+
+	print('The state with most accidents in 2020 was:')
+	print(state_most_accidents)
+
+
+	# Return data to the original format since an extra
+	# column was added ("year") to isolate the year
+	# and answer the question
+	data.drop("year", axis=1, inplace=True)
 	
 
 
@@ -100,6 +120,7 @@ print(data)
 
 # print(delta)
 Question1()
+#Question2()
 
 #print(data)
 
