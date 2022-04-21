@@ -1,3 +1,4 @@
+################################
 # Course: CMPS 3500
 # Class Project
 # Python Implementation: Basic Data Analysis
@@ -6,6 +7,33 @@
 # Student 2: Carlos Hernandez
 # Student 3: Edmund Felicidario
 # Student 4: Juan Sierra Diaz
+################################
+
+######### to-do list ###########
+# data cleaning: --> DONE!
+# 1. DONE - load csv file and store in array/dataframe
+# 2. DONE - eliminate rows with missing data in..(see prompt)
+# 3. DONE - eliminate rows with empty values in 3 or more columns
+# 4. DONE - eliminate rows with distance zero 
+# 5. DONE - only consider in your analysis the first 5 digits of the zip
+# 6. DONE - eliminate? rows that lasted no time (endtime - starttime = 0)
+#
+# functions:
+# 1. what month were there more accidents reported?
+# 2. what state had most accidents in 2020?
+# 3. what state had most accidents with severity 2 in 2021?
+# 4. what severity is most common in Virginia?
+# 5. what are the 5 cities that had the most accidents in 2019 in CA?
+# 6. what was the avg humidity and avg temp of all accidents of severity 4 in 2021?
+# 7. what are the 3 most common weather conditions when accidents occured?
+# 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
+# 9. how many accidents of each severity were recorded in bakersfield?
+# 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2022?
+#
+# runtimes
+# interfaces
+#
+###############################
 
 # imports pandas, a useful data science library
 import csv
@@ -18,7 +46,7 @@ import datetime
 def Question1():
 
 	#print(type(validData["Start_Time"]))
-	validData['month'] = pd.DatetimeIndex(validData['Start_Time']).month
+	data['month'] = pd.DatetimeIndex(data['Start_Time']).month
 	#print(validData)
 	#df['year'] = pd.datetimeIndex(validData["Start_Time"]).year
 
@@ -34,7 +62,7 @@ def Question1():
 	accident_counter_october = 0
 	accident_counter_november = 0
 	accident_counter_december = 0
-	for row in validData['month']:
+	for row in data['month']:
 		if row == 1:
 			accident_counter_january = accident_counter_january + 1
 		if row == 2:
@@ -88,26 +116,33 @@ def Question1():
 
 # reads file
 data = pd.read_csv("test_data.csv", index_col=0)
-# removes rows with specific missing data
-validData = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
 
-#delete rows with 0 in distance 
-data.shape
-validData = data.loc[data['Distance(mi)'] != 0]
-data.shape
-#drop rows with 3 or more missing column values
-validData = validData.dropna(axis=0,thresh=18)
-#remove rows with elapsed time equal to zero
-delta = pd.to_datetime(data["End_Time"])-pd.to_datetime(data["Start_Time"])
-# resets index numbers
-validData.reset_index(drop=True,inplace=True)
+# removes rows with specific missing data
+data = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
+
+# drop rows with 3 or more missing column values
+data = data.dropna(axis=0,thresh=18)
+
+# delete rows with 0 in distance 
+data = data.loc[data['Distance(mi)'] != 0]
+
+# converts zipcode data type to string, then shows only the first 5 characters
+# this doesnt remove some invalid zipcodes like <4 digit zips
+data['Zipcode'] = data['Zipcode'].apply(str)
+data['Zipcode'] = data['Zipcode'].str[:5]
+
+# removes rows with endtime-starttime = 0
+# does NOT use math; it checks if the strings end/start date are equal and if strings end/start time are equal
+data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
+
+# resets index numbers, this should be the second to last thing called (last statement should be print)
+data.reset_index(drop=True,inplace=True)
 
 # prints all rows after cleanup
-print(validData)
+print(data)
 
-print(delta)
-
-Question1()
+# print(delta)
+#Question1()
 
 
 
