@@ -59,8 +59,7 @@ def Question1():
 	full_month_name = datetime_object.strftime("%B")
 
 
-	print('The month with most accidents was: ')
-	print(full_month_name)
+	print('The month with most accidents was:',full_month_name)
 
 	# Return data to the original format since an extra
 	# column was added ("month") to isolate the month
@@ -72,21 +71,39 @@ def Question2():
 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
 	
-	#Dataframe with only the year 2020
+	# Filter data with only the year 2020
 	data_2020 = data[data['year'] == 2020]
 
 	state_most_accidents = data_2020['State'].value_counts().idxmax()
 	#print (data_2020)
 
-	print('The state with most accidents in 2020 was:')
-	print(state_most_accidents)
+	print('The state with most accidents in 2020 was:', state_most_accidents)
 
 
 	# Return data to the original format since an extra
 	# column was added ("year") to isolate the year
 	# and answer the question
 	data.drop("year", axis=1, inplace=True)
-	
+
+def Question3():
+	#3. what state had most accidents with severity 2 in 2021?
+
+
+	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
+
+	# Filter data with year 2021 and only states with Severity == 2
+	data_2021 = data[(data['year'] == 2021) & (data['Severity'] == 2)]
+
+	states_severity_2 = data_2021['State'].value_counts().idxmax()
+
+	#print(data_2021)
+
+	print('The state with most accidents with severity 2 in 2021 was:', states_severity_2)
+
+	# Return data to the original format since an extra
+	# column was added ("year") to isolate the year
+	# and answer the question
+	data.drop("year", axis=1, inplace=True)
 
 
 # reads file
@@ -120,10 +137,14 @@ print(data)
 
 # print(delta)
 Question1()
+
+
+# Had to comment out Question2 and Question 3 because 
+# it only works when reading the US_Accidents_data.csv file
 #Question2()
+#Question3()
 
 #print(data)
-
 
 
 
