@@ -120,6 +120,28 @@ def Question4():
     print('What severity is the most common in Virginia?')
     
     data.drop("Severity", axis=1, inplace=True)
+
+#5. what are the 5 cities that had the most accidents in 2019 in CA?
+def Question5():
+
+	#5. what are the 5 cities that had the most accidents in 2019 in CA?
+
+	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
+
+	# Filter data with the year 2019 and state CA only
+	data_2019_CA = data[(data['year'] == 2019) & (data['State'] == 'CA')]
+
+	# Get the top 5 cities from filtered data
+	top_five_cities = data_2019_CA['City'].value_counts().nlargest(5)
+
+	
+	print('The 5 cities that had the most accidents in 2019 in CA are: ')
+	print(top_five_cities.to_string()) 
+
+	# Return data to the original format since an extra
+	# column was added ("year") to isolate the year
+	# and answer the question
+	data.drop("year", axis=1, inplace=True)
  	
  
 print("Loading and cleaning input data set:")
@@ -161,6 +183,10 @@ Question1()
 # it only works when reading the US_Accidents_data.csv file
 #Question2()
 #Question3()
+#Question4()
+#Question5()
+
+
 
 #print(data)
 
