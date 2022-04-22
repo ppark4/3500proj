@@ -142,13 +142,23 @@ def Question5():
 	# column was added ("year") to isolate the year
 	# and answer the question
 	data.drop("year", axis=1, inplace=True)
+
+
+# 7. what are the 3 most common weather conditions when accidents occured?
+def Question7():
+
+	three_common_weather_condtions = data['Weather_Condition'].value_counts().nlargest(3)
+
+
+	print('The 3 most common weather conditions when accidents occured are: ')
+	print(three_common_weather_condtions.to_string())
  	
  
 print("Loading and cleaning input data set:")
 print("************************************")
 # reads file
-data = pd.read_csv("test_data.csv", index_col=0)
-#data = pd.read_csv("US_Accidents_data.csv", index_col=0)
+#data = pd.read_csv("test_data.csv", index_col=0)
+data = pd.read_csv("US_Accidents_data.csv", index_col=0)
 
 
 # removes rows with specific missing data
@@ -181,11 +191,11 @@ Question1()
 
 # Had to comment out Question2 and Question 3 because 
 # it only works when reading the US_Accidents_data.csv file
-#Question2()
-#Question3()
+Question2()
+Question3()
 #Question4()
-#Question5()
-
+Question5()
+Question7()
 
 
 #print(data)
