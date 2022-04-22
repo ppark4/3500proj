@@ -141,10 +141,10 @@ Question1()
 
 # Had to comment out Question2 and Question 3 because 
 # it only works when reading the US_Accidents_data.csv file
-#Question2()
-#Question3()
+Question2()
+Question3()
 
-#print(data)
+print(data)
 
 
 
