@@ -144,21 +144,49 @@ def Question5():
 	data.drop("year", axis=1, inplace=True)
 
 
+#6. what was the avg humidity and avg temp of all accidents of severity 4 in 2021?
+def Question6():
+
+
+ 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
+
+ 	# Filter data
+ 	data_2021_Severity_4 = data[(data['year'] == 2021) & (data['Severity'] == 4)]
+
+ 	humidity_sum = data_2021_Severity_4['Humidity(%)'].sum()
+ 	temperature_sum = data_2021_Severity_4['Temperature(F)'].sum()
+
+ 	length_humidity = len(data_2021_Severity_4['Humidity(%)'])
+ 	length_tem = len(data_2021_Severity_4['Temperature(F)'])
+
+ 	humidity_ave = humidity_sum/length_humidity
+ 	temperature_ave = temperature_sum/length_tem
+
+ 	print("The average humidity for all accidents of severity 4 in 2021 is:", humidity_ave)
+ 	print("The average temperature for all accidents of severity 4 in 2021 is:", temperature_ave)
+
+ 	# Return data to the original format since an extra
+	# column was added ("year") to isolate the year
+	# and answer the question
+ 	data.drop('year', axis=1, inplace=True)
+
+
 # 7. what are the 3 most common weather conditions when accidents occured?
 def Question7():
 
 	three_common_weather_condtions = data['Weather_Condition'].value_counts().nlargest(3)
 
-
 	print('The 3 most common weather conditions when accidents occured are: ')
 	print(three_common_weather_condtions.to_string())
+
+
  	
  
 print("Loading and cleaning input data set:")
 print("************************************")
 # reads file
-#data = pd.read_csv("test_data.csv", index_col=0)
-data = pd.read_csv("US_Accidents_data.csv", index_col=0)
+data = pd.read_csv("test_data.csv", index_col=0)
+#data = pd.read_csv("US_Accidents_data.csv", index_col=0)
 
 
 # removes rows with specific missing data
@@ -191,11 +219,12 @@ Question1()
 
 # Had to comment out Question2 and Question 3 because 
 # it only works when reading the US_Accidents_data.csv file
-Question2()
-Question3()
+#Question2()
+#Question3()
 #Question4()
-Question5()
-Question7()
+#Question5()
+#Question6()
+#Question7()
 
 
 #print(data)
