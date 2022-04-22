@@ -42,6 +42,7 @@ import numpy as np
 from datetime import date
 import datetime
 
+# 1. what month were there more accidents reported?
 def Question1():
 
 	#print(type(validData["Start_Time"]))
@@ -66,6 +67,7 @@ def Question1():
 	# and answer the question
 	data.drop("month", axis=1, inplace=True)
 
+# 2. what state had most accidents in 2020?
 def Question2():
 
 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
@@ -85,9 +87,8 @@ def Question2():
 	# and answer the question
 	data.drop("year", axis=1, inplace=True)
 
+# 3. what state had most accidents with severity 2 in 2021?
 def Question3():
-	#3. what state had most accidents with severity 2 in 2021?
-
 
 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
@@ -105,7 +106,24 @@ def Question3():
 	# and answer the question
 	data.drop("year", axis=1, inplace=True)
 
-
+# 4. what severity is most common in Virginia?
+def Question4():
+    
+    # Filtering for:
+    #	most common severity
+    common_severity = data['Severity'].value_counts().idxmax()
+    common_severity = str(common_severity)
+    
+    #	in Virginia
+    data_state = data[data['State'] == Virginia]
+    
+    print('What severity is the most common in Virginia?')
+    
+    data.drop("Severity", axis=1, inplace=True)
+ 	
+ 
+print("Loading and cleaning input data set:")
+print("************************************")
 # reads file
 data = pd.read_csv("test_data.csv", index_col=0)
 #data = pd.read_csv("US_Accidents_data.csv", index_col=0)
@@ -141,10 +159,10 @@ Question1()
 
 # Had to comment out Question2 and Question 3 because 
 # it only works when reading the US_Accidents_data.csv file
-Question2()
-Question3()
+#Question2()
+#Question3()
 
-print(data)
+#print(data)
 
 
 
