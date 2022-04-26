@@ -180,6 +180,27 @@ def Question7():
 	print(three_common_weather_condtions.to_string())
 
 
+# 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
+# This Question stills needs some work, don't know clearly what it is asking
+def Question8():
+
+	# Filter data with accidents of New Hampshire with severity 2 
+	data_severity_2_NH = data[(data['Severity'] == 2) & (data['State'] == 'NH')]
+	print(data_severity_2_NH)
+
+# 9. how many accidents of each severity were recorded in bakersfield?
+def Question9():
+
+
+	#Filter data to only the city of Bakersfield
+	data_Bakersfield = data[(data['City'] == 'Bakersfield')]
+	num_accidents = data_Bakersfield['Severity'].value_counts()
+
+	print("The number of accidents of each severity recorded in Bakersfield are as follows: ")
+	print(num_accidents.to_string())
+
+
+
  	
  
 print("Loading and cleaning input data set:")
@@ -225,12 +246,7 @@ Question1()
 #Question5()
 #Question6()
 #Question7()
-
+#Question8()
+#Question9()
 
 #print(data)
-
-
-
-
-
-
