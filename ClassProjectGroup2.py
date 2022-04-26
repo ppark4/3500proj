@@ -28,7 +28,7 @@
 # 7. what are the 3 most common weather conditions when accidents occured?
 # 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
 # 9. how many accidents of each severity were recorded in bakersfield?
-# 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2022?
+# 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?
 #
 # runtimes
 # interfaces
@@ -45,10 +45,8 @@ import datetime
 # 1. what month were there more accidents reported?
 def Question1():
 
-	#print(type(validData["Start_Time"]))
 	data['month'] = pd.DatetimeIndex(data['Start_Time']).month
-	#df['year'] = pd.datetimeIndex(validData["Start_Time"]).year
-
+	
 	# Get the most frequent month
 	# The most frequent month should be the month with most accidents
 	month_num = data['month'].value_counts().idxmax()
@@ -199,9 +197,40 @@ def Question9():
 	print("The number of accidents of each severity recorded in Bakersfield are as follows: ")
 	print(num_accidents.to_string())
 
+# 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?
+def Question10():
+
+	# Adding two extra columns to the data to filter based on year and month
+	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
+	data['month'] = pd.DatetimeIndex(data['Start_Time']).month
+
+	data['Start_Time'] = pd.to_datetime(data['Start_Time'], errors='coerce')
+	data['End_Time'] = pd.to_datetime(data['End_Time'], errors='coerce')
+
+	data['Duration'] = (data['End_Time'] - data['Start_Time']).dt.total_seconds() / 60 / 60
+
+	# Filter data with only the year 2020 and Florida
+	data_florida = data[(data['year'] == 2020) & (data['State'] == 'FL')] 
+
+	# Further filtering with the spring months(mar,apr,may)
+	data_florida_spring = data_florida[(data_florida['month'] == 3) | (data_florida['month'] == 4) | (data_florida['month'] == 5)]
 
 
- 	
+	longest_accident = data_florida_spring['Duration'].max()
+
+
+
+	accident_id = data_florida_spring.loc[data_florida_spring['Duration'] == longest_accident]
+
+	print("The longest accident (in hours) in Florida during the spring took: ", longest_accident)
+	print("Here is the full accident information: ")
+	print(accident_id)
+
+	# Return data to orignal format
+	data.drop('month', axis=1, inplace=True)
+	data.drop('year', axis=1, inplace=True)
+	data.drop('Duration', axis=1, inplace=True)
+
  
 print("Loading and cleaning input data set:")
 print("************************************")
@@ -234,11 +263,10 @@ data.reset_index(drop=True,inplace=True)
 # prints all rows after cleanup
 print(data)
 
-# print(delta)
 Question1()
 
 
-# Had to comment out Question2 and Question 3 because 
+# Had to comment out Questions because 
 # it only works when reading the US_Accidents_data.csv file
 #Question2()
 #Question3()
@@ -248,5 +276,6 @@ Question1()
 #Question7()
 #Question8()
 #Question9()
+#Question10()
 
 #print(data)
