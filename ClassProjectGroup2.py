@@ -107,17 +107,15 @@ def Question3():
 # 4. what severity is most common in Virginia?
 def Question4():
     
-    # Filtering for:
-    #	most common severity
-    common_severity = data['Severity'].value_counts().idxmax()
-    common_severity = str(common_severity)
-    
-    #	in Virginia
-    data_state = data[data['State'] == Virginia]
-    
-    print('What severity is the most common in Virginia?')
-    
-    data.drop("Severity", axis=1, inplace=True)
+	# Filter data with only the state of Virginia
+	data_virginia = data[(data['State'] == 'VA')]
+
+	#print(data_virginia)
+
+	# Get the most common severity
+	most_common_severity = data_virginia['Severity'].value_counts().idxmax()
+
+	print('The most coomon accident severity in Virginia is: ', most_common_severity)
 
 #5. what are the 5 cities that had the most accidents in 2019 in CA?
 def Question5():
