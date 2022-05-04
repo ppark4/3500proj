@@ -249,52 +249,142 @@ def Question10():
 	data.drop('year', axis=1, inplace=True)
 	data.drop('Duration', axis=1, inplace=True)
 
- 
-print("Loading and cleaning input data set:")
-print("************************************")
-# reads file
-data = pd.read_csv("test_data.csv", index_col=0)
-#data = pd.read_csv("US_Accidents_data.csv", index_col=0)
 
 
-# removes rows with specific missing data
-data = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
+# Flags for error handling
+data_loaded = False
+data_processed = False
 
-# drop rows with 3 or more missing column values
-data = data.dropna(axis=0,thresh=18)
+# using the while loop to print menu list  
+while True:
+	print(" ")
+	print("MENU")  
+	print("1. Load data")  
+	print("2. Process data")  
+	print("3. Print Answers")  
+	print("4. Search Accidents (Use City, State, and Zip Code)") 
+	print("5. Search Accidents (Year, Month and Day)")
+	print("6. Search Accidents (Temperature Range and Visibility Range)") 
+	print("7. Quit") 
 
-# delete rows with 0 in distance 
-data = data.loc[data['Distance(mi)'] != 0]
+	try:
+		users_choice = int(input("\nEnter your Choice: "))
 
-# converts zipcode data type to string, then shows only the first 5 characters
-# this doesnt remove some invalid zipcodes like <4 digit zips
-data['Zipcode'] = data['Zipcode'].apply(str)
-data['Zipcode'] = data['Zipcode'].str[:5]
-
-# removes rows with endtime-starttime = 0
-# does NOT use math; it checks if the strings end/start date are equal and if strings end/start time are equal
-data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
-
-# resets index numbers, this should be the second to last thing called (last statement should be print)
-data.reset_index(drop=True,inplace=True)
-
-# prints all rows after cleanup
-print(data)
-
-Question1()
+	except ValueError:
+		print(" ")
+		print("Enter a number from the menu please.")
+		continue
 
 
-# Had to comment out Questions because 
-# it only works when reading the US_Accidents_data.csv file
-#Question2()
-#Question3()
-#Question4()
-#Question6()
-#Question5()
-#Question7()
-#Question8()
-#Question9()
-#Question10()
+	# 1. Load data
+	if users_choice == 1:
 
+		if data_loaded == True:
+			print(" ")
+			print("Data already loaded.")
+
+		else:
+
+			print(" ")
+			print("Loading and Reading data")
+			print("************************************")
+			# reads file
+			data = pd.read_csv("test_data.csv", index_col=0)
+			#data = pd.read_csv("US_Accidents_data.csv", index_col=0)
+			data_loaded = True
+
+			print(" ")
+			print("Data successfully loaded!")
+
+	# 2. Process data
+	elif users_choice == 2:
+
+		if data_loaded == False:
+
+			print(" ")
+			print("Please first load the data.")
+
+		elif data_processed == True:
+			print(" ")
+			print(" Data already processed.")
+
+		else:
+
+			print(" ")
+			print("Proccessing data")
+			print("*******************")
+
+			# removes rows with specific missing data
+			data = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
+
+			# drop rows with 3 or more missing column values
+			data = data.dropna(axis=0,thresh=18)
+
+			# delete rows with 0 in distance 
+			data = data.loc[data['Distance(mi)'] != 0]
+
+			# converts zipcode data type to string, then shows only the first 5 characters
+			# this doesnt remove some invalid zipcodes like <4 digit zips
+			data['Zipcode'] = data['Zipcode'].apply(str)
+			data['Zipcode'] = data['Zipcode'].str[:5]
+
+			# removes rows with endtime-starttime = 0
+			# does NOT use math; it checks if the strings end/start date are equal and if strings end/start time are equal
+			data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
+
+			# resets index numbers, this should be the second to last thing called (last statement should be print)
+			data.reset_index(drop=True,inplace=True)
+
+			data_processed = True
+
+			# prints all rows after cleanup
+			print(data)
+
+			print(" ")
+			print("Data successfully processed!")
+
+	# 3. Print Answers
+	elif users_choice == 3:
+		if data_loaded == False:
+			print(" ")
+			print("Please first load data.")
+		elif data_processed == False:
+			print(" ")
+			print("Please process the data.")
+
+		else:
+
+			print(" ")
+			print("Answering Questions")
+			print("*******************")
+
+			Question1()
+			# Had to comment out Questions because 
+			# it only works when reading the US_Accidents_data.csv file
+			#Question2()
+			#Question3()
+			#Question4()
+			#Question5()
+			#Question6()
+			#Question7()
+			#Question8()
+			#Question9()
+			#Question10()
+
+	elif users_choice == 4:
+		print("True")
+
+	elif users_choice == 5:
+		print("True")
+
+	elif users_choice == 6:
+		print("True")
+
+	elif users_choice == 7:
+		break
+
+	else:
+		print(" ")
+		print("Please enter a valid Input from the menu.")
 
 #print(data)
