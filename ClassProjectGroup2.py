@@ -45,6 +45,7 @@ import datetime
 # 1. what month were there more accidents reported?
 def Question1():
 
+	# Create an extra column with each indivual month
 	data['month'] = pd.DatetimeIndex(data['Start_Time']).month
 	
 	# Get the most frequent month
@@ -58,6 +59,8 @@ def Question1():
 	full_month_name = datetime_object.strftime("%B")
 
 
+	print(" ")
+	print("1. what month were there more accidents reported?")
 	print('The month with most accidents was:',full_month_name)
 
 	# Return data to the original format since an extra
@@ -68,6 +71,7 @@ def Question1():
 # 2. what state had most accidents in 2020?
 def Question2():
 
+	# Create an extra column with each indivual year
 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
 	
@@ -75,9 +79,10 @@ def Question2():
 	data_2020 = data[data['year'] == 2020]
 
 	state_most_accidents = data_2020['State'].value_counts().idxmax()
-	#print (data_2020)
 
-	print('The state with most accidents in 2020 was:', state_most_accidents)
+	print(" ")
+	print("2. what state had most accidents in 2020?")
+	print("The state with most accidents in 2020 was:", state_most_accidents)
 
 
 	# Return data to the original format since an extra
@@ -95,8 +100,8 @@ def Question3():
 
 	states_severity_2 = data_2021['State'].value_counts().idxmax()
 
-	#print(data_2021)
-
+	print(" ")
+	print("3. what state had most accidents with severity 2 in 2021?")
 	print('The state with most accidents with severity 2 in 2021 was:', states_severity_2)
 
 	# Return data to the original format since an extra
@@ -115,12 +120,12 @@ def Question4():
 	# Get the most common severity
 	most_common_severity = data_virginia['Severity'].value_counts().idxmax()
 
+	print(" ")
+	print("4. what severity is most common in Virginia?)")
 	print('The most coomon accident severity in Virginia is: ', most_common_severity)
 
 #5. what are the 5 cities that had the most accidents in 2019 in CA?
 def Question5():
-
-	#5. what are the 5 cities that had the most accidents in 2019 in CA?
 
 	data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
@@ -130,7 +135,8 @@ def Question5():
 	# Get the top 5 cities from filtered data
 	top_five_cities = data_2019_CA['City'].value_counts().nlargest(5)
 
-	
+	print(" ")
+	print("5. what are the 5 cities that had the most accidents in 2019 in CA?")
 	print('The 5 cities that had the most accidents in 2019 in CA are: ')
 	print(top_five_cities.to_string()) 
 
@@ -158,6 +164,8 @@ def Question6():
  	humidity_ave = humidity_sum/length_humidity
  	temperature_ave = temperature_sum/length_tem
 
+ 	print(" ")
+ 	print("6. What was the avg humidity and avg temp of all accidents of severity 4 in 2021?")
  	print("The average humidity for all accidents of severity 4 in 2021 is:", humidity_ave)
  	print("The average temperature for all accidents of severity 4 in 2021 is:", temperature_ave)
 
@@ -172,17 +180,24 @@ def Question7():
 
 	three_common_weather_condtions = data['Weather_Condition'].value_counts().nlargest(3)
 
+	print(" ")
+	print("# 7. what are the 3 most common weather conditions when accidents occured?")
 	print('The 3 most common weather conditions when accidents occured are: ')
 	print(three_common_weather_condtions.to_string())
 
 
 # 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
-# This Question stills needs some work, don't know clearly what it is asking
 def Question8():
 
 	# Filter data with accidents of New Hampshire with severity 2 
 	data_severity_2_NH = data[(data['Severity'] == 2) & (data['State'] == 'NH')]
-	print(data_severity_2_NH)
+
+	data_max_visibility = data_severity_2_NH[data_severity_2_NH['Visibility(mi)'] == 10.0]
+
+	print(" ")
+	print("8. What was the maximum visibility of all accidents of severity 2 in new hampshire?")
+	print("The following is a dataframe with all accidents with visibility 10")
+	print(data_max_visibility)
 
 # 9. how many accidents of each severity were recorded in bakersfield?
 def Question9():
@@ -192,6 +207,8 @@ def Question9():
 	data_Bakersfield = data[(data['City'] == 'Bakersfield')]
 	num_accidents = data_Bakersfield['Severity'].value_counts()
 
+	print(" ")
+	print("# 9. how many accidents of each severity were recorded in bakersfield?")
 	print("The number of accidents of each severity recorded in Bakersfield are as follows: ")
 	print(num_accidents.to_string())
 
@@ -220,6 +237,9 @@ def Question10():
 
 	accident_id = data_florida_spring.loc[data_florida_spring['Duration'] == longest_accident]
 
+
+	print(" ")
+	print("10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?")
 	print("The longest accident (in hours) in Florida during the spring took: ", longest_accident)
 	print("Here is the full accident information: ")
 	print(accident_id)
@@ -269,11 +289,12 @@ Question1()
 #Question2()
 #Question3()
 #Question4()
-#Question5()
 #Question6()
+#Question5()
 #Question7()
 #Question8()
 #Question9()
 #Question10()
+
 
 #print(data)
