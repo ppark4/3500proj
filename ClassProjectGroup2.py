@@ -30,9 +30,16 @@
 # 9. how many accidents of each severity were recorded in bakersfield?
 # 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?
 #
-# runtimes
-# interfaces
+# runtimes:
 #
+# user interface:
+# 1. DONE - Load data 
+# 2. DONE - Process data
+# 3. Answering questions
+# 4. Search accidents by city, state, zip
+# 5. Search accidents by year, month, day
+# 6. Search accidents by temperature, range, visibility
+# 7. DONE - Quit
 ###############################
 
 # imports pandas, a useful data science library
@@ -41,6 +48,45 @@ import pandas as pd
 import numpy as np
 from datetime import date
 import datetime
+from datetime import datetime
+
+# initialize empty dataframe
+data = pd.DataFrame()
+
+# filename
+file = "test_data.csv"
+
+# current time 
+time = datetime.utcnow().strftime('%H:%M:%S.%f')[:-2]
+# load data function, returns loaded dataframe object
+def loadData(filename):
+	data = pd.read_csv(filename, index_col=0)
+	return data
+
+# process data function, returns processed dataframe object
+def processData(dataObj):
+	# removes rows with specific missing data
+	data = dataObj.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
+
+	# drop rows with 3 or more missing column values
+	data = data.dropna(axis=0,thresh=18)
+
+	# delete rows with 0 in distance 
+	data = data.loc[data['Distance(mi)'] != 0]
+
+	# converts zipcode data type to string, then shows only the first 5 characters
+	# this doesnt remove some invalid zipcodes like <4 digit zips
+	data['Zipcode'] = data['Zipcode'].apply(str)
+	data['Zipcode'] = data['Zipcode'].str[:5]
+
+	# removes rows with endtime-starttime = 0
+	# does NOT use math; it checks if the strings end/start date are equal and if strings end/start time are equal
+	data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
+
+	# resets index numbers, this should be the second to last thing called (last statement should be print)
+	data.reset_index(drop=True,inplace=True)
+
+	return data
 
 # 1. what month were there more accidents reported?
 def Question1():
@@ -285,16 +331,24 @@ while True:
 
 		else:
 
-			print(" ")
-			print("Loading and Reading data")
-			print("************************************")
+			print()
+			print("****************")
+			print(time)
+			print("Starting script...")
 			# reads file
-			data = pd.read_csv("test_data.csv", index_col=0)
+			data = loadData(file)
+			#data = pd.read_csv("test_data.csv", index_col=0)
 			#data = pd.read_csv("US_Accidents_data.csv", index_col=0)
 			data_loaded = True
-
-			print(" ")
-			print("Data successfully loaded!")
+			#print(data)
+			#print(" ")
+			print('Loading "{}"...'.format(file))
+			print("Total Columns Read:",data.shape[1])
+			print("Total Rows Read:",data.shape[0])
+			print()
+			print("Time to load is: ")
+			print()
+			print("****************")
 
 	# 2. Process data
 	elif users_choice == 2:
@@ -311,38 +365,41 @@ while True:
 		else:
 
 			print(" ")
-			print("Proccessing data")
-			print("*******************")
+			#print("Performing data clean up...")
 
 			# removes rows with specific missing data
-			data = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
+			#data = data.dropna(subset=['ID', 'Severity', 'Zipcode','Start_Time','End_Time','Visibility(mi)', 'Weather_Condition','Country'])
 
 			# drop rows with 3 or more missing column values
-			data = data.dropna(axis=0,thresh=18)
+			#data = data.dropna(axis=0,thresh=18)
 
 			# delete rows with 0 in distance 
-			data = data.loc[data['Distance(mi)'] != 0]
+			#data = data.loc[data['Distance(mi)'] != 0]
 
 			# converts zipcode data type to string, then shows only the first 5 characters
 			# this doesnt remove some invalid zipcodes like <4 digit zips
-			data['Zipcode'] = data['Zipcode'].apply(str)
-			data['Zipcode'] = data['Zipcode'].str[:5]
+			#data['Zipcode'] = data['Zipcode'].apply(str)
+			#data['Zipcode'] = data['Zipcode'].str[:5]
 
 			# removes rows with endtime-starttime = 0
 			# does NOT use math; it checks if the strings end/start date are equal and if strings end/start time are equal
-			data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
+			#data = data.drop(data[(data["End_Time"].str.split(expand=True)[0] == data["Start_Time"].str.split(expand=True)[0]) & (data["End_Time"].str.split(expand=True)[1] == data["Start_Time"].str.split(expand=True)[1])].index)
 
 			# resets index numbers, this should be the second to last thing called (last statement should be print)
-			data.reset_index(drop=True,inplace=True)
-
+			#data.reset_index(drop=True,inplace=True)
+			data = processData(data)
 			data_processed = True
 
 			# prints all rows after cleanup
-			print(data)
+			#print(data)
 
-			print(" ")
-			print("Data successfully processed!")
-
+			print("****************")
+			print("Performing Data Clean Up...")
+			print("Total Rows Read after cleaning:", data.shape[0])
+			print()
+			print("Time to process is: ")
+			print()
+			print("****************")
 	# 3. Print Answers
 	elif users_choice == 3:
 		if data_loaded == False:
