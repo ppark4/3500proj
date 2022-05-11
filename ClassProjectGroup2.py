@@ -95,6 +95,8 @@ def processData(dataObj):
     # resets index numbers, this should be the second to last thing called (last statement should be print)
     data.reset_index(drop=True,inplace=True)
 
+    data.to_csv('sfoo.csv')
+
     return data
 
 # 1. what month were there more accidents reported?
@@ -197,8 +199,12 @@ def Question5(data):
         return "None"
     else:
         # Get the top 5 cities from filtered data
-        top_five_cities = data_2019_CA['City'].value_counts().nlargest(5)
-        return top_five_cities.to_string()
+        top_five_cities = data_2019_CA['City'].value_counts().index.tolist()[:5]
+
+        result = top_five_cities[0] + ", " + top_five_cities[1] + ", " + top_five_cities[2] + ", " + top_five_cities[3] + ", " + top_five_cities[4]
+
+        return result
+
     #print(" ")
     #print("5. what are the 5 cities that had the most accidents in 2019 in CA?")
     #print('The 5 cities that had the most accidents in 2019 in CA are: ')
@@ -247,12 +253,20 @@ def Question6(data):
 # 7. what are the 3 most common weather conditions when accidents occured?
 def Question7(data):
 
-    three_common_weather_conditions = data['Weather_Condition'].value_counts().nlargest(3)
+    # Had to create a copy of the orignal data, for some reason I was getting
+    # an error when working with the origal data.
+    # This seem to work for now, further optimization might be need. 
+    temp_df = data
 
-    if three_common_weather_conditions.empty:
+    if temp_df.empty:
         return "None"
     else:
-        return three_common_weather_conditions.to_string()
+        # Getting three most common weather conditions
+        three_common_weather_conditions = temp_df['Weather_Condition'].value_counts().index.tolist()[:3]
+        result = three_common_weather_conditions[0] + ", " + three_common_weather_conditions[1] + ", " + three_common_weather_conditions[2]
+        return result
+
+
     #print(" ")
     #print("# 7. what are the 3 most common weather conditions when accidents occured?")
     #print('The 3 most common weather conditions when accidents occured are: ')
@@ -278,16 +292,25 @@ def Question8(data):
 # 9. how many accidents of each severity were recorded in bakersfield?
 def Question9(data):
 
+
     #Filter data to only the city of Bakersfield
     data_Bakersfield = data[(data['City'] == 'Bakersfield')]
     if data_Bakersfield.empty:
         return "None"
     else:
-        num_accidents = data_Bakersfield['Severity'].value_counts()
-        if num_accidents.empty:
-            return "None"
-        else:
-            return num_accidents.to_string()
+
+        severity = data_Bakersfield['Severity'].value_counts().index.tolist()
+        num_accidents = data_Bakersfield['Severity'].value_counts().values.tolist()
+
+        result = str(num_accidents[0]) + " accidents of severity " + str(severity[0]) + ", " + str(num_accidents[1]) \
+        + " accidents of severity " + str(severity[1]) + ", and " \
+        + str(num_accidents[2]) + " accidents of severity " + str(severity[2])
+        return result
+
+        #if num_accidents.empty:
+            #return "None"
+        #else:
+            #return num_accidents
 
 
     #print(" ")
@@ -433,7 +456,7 @@ while True:
             print('[{}]'.format(time()),"What severity is the most common in Virginia?")
             print('[{}]'.format(time()),Question4(data))
             print('[{}]'.format(time()),"What are the 5 cities that had the most accidents in 2019 in California?")
-            print('[{}]'.format(time()),Question5(data))
+            print('[{}]'.format(time()),(Question5(data)))
             print('[{}]'.format(time()),"What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021?")
             print('[{}]'.format(time()),Question6(data))
             print('[{}]'.format(time()),"What are the 3 most common weather conditions (weather_conditions) when accidents occurred?")
