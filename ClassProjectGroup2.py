@@ -276,14 +276,17 @@ def Question7(data):
 # 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
 def Question8(data):
 
+    
     # Filter data with accidents of New Hampshire with severity 2 
     data_severity_2_NH = data[(data['Severity'] == 2) & (data['State'] == 'NH')]
 
-    data_max_visibility = data_severity_2_NH[data_severity_2_NH['Visibility(mi)'] == 10.0]
-    if data_max_visibility.empty:
+    #data_max_visibility = data_severity_2_NH[data_severity_2_NH['Visibility(mi)'] == 10.0]
+    if data_severity_2_NH.empty:
         return "None"
     else:
-        return data_max_visibility 
+        max_visibility = data_severity_2_NH['Visibility(mi)'].value_counts().idxmax()
+        return max_visibility 
+
     #print(" ")
     #print("8. What was the maximum visibility of all accidents of severity 2 in new hampshire?")
     #print("The following is a dataframe with all accidents with visibility 10")
