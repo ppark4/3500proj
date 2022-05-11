@@ -115,18 +115,11 @@ def Question1(data):
 
     month_num = str(month_num)
 
+
     datetime_object = datetime.strptime(month_num, "%m")
+
+    # Convert the month number to the full month name
     full_month_name = datetime_object.strftime("%B")
-
-
-    #print(" ")
-    #print("1. what month were there more accidents reported?")
-    #print('The month with most accidents was:',full_month_name)
-
-    # Return data to the original format since an extra
-    # column was added ("month") to isolate the month
-    # and answer the question
-    # data.drop("month", axis=1, inplace=True)
 
     return full_month_name
 
@@ -140,24 +133,18 @@ def Question2(data):
     
     # Filter data with only the year 2020
     data_2020 = data[data['year'] == 2020]
+
     if data_2020.empty:
         return "None"
     else:
         state_most_accidents = data_2020['State'].value_counts().idxmax()
         return state_most_accidents
-    #print(" ")
-    #print("2. what state had most accidents in 2020?")
-    #print("The state with most accidents in 2020 was:", state_most_accidents)
-
-
-    # Return data to the original format since an extra
-    # column was added ("year") to isolate the year
-    # and answer the question
-    #data.drop("year", axis=1, inplace=True)
+ 
 
 # 3. what state had most accidents with severity 2 in 2021?
 def Question3(data):
 
+    # Add and extra column with only the year
     data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
     # Filter data with year 2021 and only states with Severity == 2
@@ -165,15 +152,9 @@ def Question3(data):
     if data_2021.empty:
         return "None"
     else:
+        # Get the state with most accidents with severity 2.
         states_severity_2 = data_2021['State'].value_counts().idxmax()
         return states_severity_2
-
-    # Return data to the original format since an extra
-    # column was added ("year") to isolate the year
-    # and answer the question
-    #data.drop("year", axis=1, inplace=True)
-    #print(type(data_2021))
-    #return states_severity_2
 
 
 # 4. what severity is most common in Virginia?
@@ -182,7 +163,6 @@ def Question4(data):
     # Filter data with only the state of Virginia
     data_virginia = data[(data['State'] == 'VA')]
 
-    #print(data_virginia)
     if data_virginia.empty:
         return "None"
     else:
@@ -194,63 +174,52 @@ def Question4(data):
 #5. what are the 5 cities that had the most accidents in 2019 in CA?
 def Question5(data):
 
+    # Add extra coloumn with only the year
     data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
     # Filter data with the year 2019 and state CA only
     data_2019_CA = data[(data['year'] == 2019) & (data['State'] == 'CA')]
+
     if data_2019_CA.empty:
         return "None"
     else:
         # Get the top 5 cities from filtered data
         top_five_cities = data_2019_CA['City'].value_counts().index.tolist()[:5]
 
+        # For print purposes, the answer was formatted this way. 
         result = top_five_cities[0] + ", " + top_five_cities[1] + ", " + top_five_cities[2] + ", " + top_five_cities[3] + ", " + top_five_cities[4]
 
         return result
 
-    #print(" ")
-    #print("5. what are the 5 cities that had the most accidents in 2019 in CA?")
-    #print('The 5 cities that had the most accidents in 2019 in CA are: ')
-    #print(top_five_cities.to_string()) 
-    # Return data to the original format since an extra
-    # column was added ("year") to isolate the year
-    # and answer the question
-    #data.drop("year", axis=1, inplace=True)
-
-
 #6. what was the avg humidity and avg temp of all accidents of severity 4 in 2021?
 def Question6(data):
 
+    # Add extra column with only the year
     data['year'] = pd.DatetimeIndex(data['Start_Time']).year
 
-     # Filter data
+     # Filter data with only the year 2021 and Severity 4
     data_2021_Severity_4 = data[(data['year'] == 2021) & (data['Severity'] == 4)]
 
     if data_2021_Severity_4.empty:
         return "None"
     else:
+
+        # Get the total sum of Humidity and Temperature
         humidity_sum = data_2021_Severity_4['Humidity(%)'].sum()
         temperature_sum = data_2021_Severity_4['Temperature(F)'].sum()
         
+        # Get lenght, number of items in that coloumn
         length_humidity = len(data_2021_Severity_4['Humidity(%)'])
         length_tem = len(data_2021_Severity_4['Temperature(F)'])
 
+        #Calculate averages
         humidity_ave = humidity_sum/length_humidity
         temperature_ave = temperature_sum/length_tem
 
-
-        result = "Average Humidity: " + str(round(humidity_ave,2)) + " F, " + "Average Temperature: " + str(round(temperature_ave,2)) + "%"
+        # Formating the output
+        result = "Average Humidity: " + str(round(humidity_ave,2)) + " %, " + "Average Temperature: " + str(round(temperature_ave,2)) + "F"
 
         return result
-     #print(" ")
-     #print("6. What was the avg humidity and avg temp of all accidents of severity 4 in 2021?")
-     #print("The average humidity for all accidents of severity 4 in 2021 is:", humidity_ave)
-     #print("The average temperature for all accidents of severity 4 in 2021 is:", temperature_ave)
-
-     # Return data to the original format since an extra
-    # column was added ("year") to isolate the year
-    # and answer the question
-     #data.drop('year', axis=1, inplace=True)
 
 
 # 7. what are the 3 most common weather conditions when accidents occured?
@@ -266,14 +235,13 @@ def Question7(data):
     else:
         # Getting three most common weather conditions
         three_common_weather_conditions = temp_df['Weather_Condition'].value_counts().index.tolist()[:3]
+        
+        # Formating for output purposes
         result = three_common_weather_conditions[0] + ", " + three_common_weather_conditions[1] + ", " + three_common_weather_conditions[2]
+
         return result
 
 
-    #print(" ")
-    #print("# 7. what are the 3 most common weather conditions when accidents occured?")
-    #print('The 3 most common weather conditions when accidents occured are: ')
-    #print(three_common_weather_conditions.to_string())
 
 
 # 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
@@ -287,42 +255,36 @@ def Question8(data):
     if data_severity_2_NH.empty:
         return "None"
     else:
+        # Get the maximun visibility
         max_visibility = data_severity_2_NH['Visibility(mi)'].value_counts().idxmax()
         return max_visibility 
-
-    #print(" ")
-    #print("8. What was the maximum visibility of all accidents of severity 2 in new hampshire?")
-    #print("The following is a dataframe with all accidents with visibility 10")
-    #print(data_max_visibility)
 
 # 9. how many accidents of each severity were recorded in bakersfield?
 def Question9(data):
 
-
     #Filter data to only the city of Bakersfield
     data_Bakersfield = data[(data['City'] == 'Bakersfield')]
+
     if data_Bakersfield.empty:
         return "None"
     else:
 
+        # Getting Severities, and storing them is a list
         severity = data_Bakersfield['Severity'].value_counts().index.tolist()
+
+        # Getting number of accidents of each individual severity and storing them in a a list
         num_accidents = data_Bakersfield['Severity'].value_counts().values.tolist()
 
+        # Formatting each severity with its respective number of accidents
         result = str(num_accidents[0]) + " accidents of severity " + str(severity[0]) + ", " + str(num_accidents[1]) \
         + " accidents of severity " + str(severity[1]) + ", and " \
         + str(num_accidents[2]) + " accidents of severity " + str(severity[2])
-        return result
 
-        #if num_accidents.empty:
-            #return "None"
-        #else:
-            #return num_accidents
+        if not num_accidents and not severity:
+            return "None"
+        else:
+            return result
 
-
-    #print(" ")
-    #print("# 9. how many accidents of each severity were recorded in bakersfield?")
-    #print("The number of accidents of each severity recorded in Bakersfield are as follows: ")
-    #print(num_accidents.to_string())
 
 # 10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?
 def Question10(data):
@@ -331,9 +293,13 @@ def Question10(data):
     data['year'] = pd.DatetimeIndex(data['Start_Time']).year
     data['month'] = pd.DatetimeIndex(data['Start_Time']).month
 
+    # Isolating only the time, this was necessary as 'Start_Time' and 'End_Time'
+    # also contain the full date
     data['Start_Time'] = pd.to_datetime(data['Start_Time'], errors='coerce')
     data['End_Time'] = pd.to_datetime(data['End_Time'], errors='coerce')
 
+
+    # Coverting duration to hours
     data['Duration'] = (data['End_Time'] - data['Start_Time']).dt.total_seconds() / 60 / 60
 
     # Filter data with only the year 2020 and Florida
@@ -346,6 +312,7 @@ def Question10(data):
         if data_florida_spring.empty:
             return "None"
         else:
+            # Get the longest accident in hours
             longest_accident = data_florida_spring['Duration'].max()
             return longest_accident
 
