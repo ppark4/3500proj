@@ -343,21 +343,30 @@ def Question10(data):
             longest_accident = data_florida_spring['Duration'].max()
             return longest_accident
 
+# Search functions
+def searchLocation(data,state,city,zip):
+    locData = data
+    if state != "":
+        locData = locData[locData["State"] == state]
+    if city != "":
+        locData = locData[locData["City"] == city]
+    if zip != "":
+        locData = locData[locData["Zipcode"] == zip]
+    return locData
+    #return locData.shape[0]
 
+def searchTime(data,year,month,day):
+    timeData = data
+    if year != "":
+        timeData = timeData[timeData[""] == year]
+    if month != "":
+        timeData = timeData[timeData["City"] == month]
+    if day != "":
+        timeData = timeData[timeData["Zipcode"] == day]
+    return timeData
 
-    #accident_id = data_florida_spring.loc[data_florida_spring['Duration'] == longest_accident]
-
-    #print(" ")
-    #print("10. what was the longeset accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?")
-    #print("The longest accident (in hours) in Florida during the spring took: ", longest_accident)
-    #print("Here is the full accident information: ")
-    #print(accident_id)
-
-    # Return data to orignal format
-    #data.drop('month', axis=1, inplace=True)
-    #data.drop('year', axis=1, inplace=True)
-    #data.drop('Duration', axis=1, inplace=True)
-
+def searchConditions(data,mintemp,maxtemp,minvis,maxvis):
+    print()
 
 
 # Flags for error handling
@@ -378,7 +387,7 @@ while True:
 
     try:
         users_choice = int(input("\nEnter your Choice: "))
-
+        print()
     except ValueError:
         print(" ")
         print("Enter a number from the menu please.")
@@ -387,19 +396,15 @@ while True:
 
     # 1. Load data
     if users_choice == 1:
-
         if data_loaded == True:
             print(" ")
             print("Data already loaded.")
-
         else:
-
             print()
             print("****************")
             print('[{}] Starting script...'.format(time()))
             # reads file
             data = loadData(file)
-
             print('[{}]'.format(time()),'Loading "{}"...'.format(file))
             print('[{}]'.format(time()),"Total Columns Read:",data.shape[1])
             print('[{}]'.format(time()),"Total Rows Read:",data.shape[0])
@@ -410,20 +415,14 @@ while True:
 
     # 2. Process data
     elif users_choice == 2:
-
         if data_loaded == False:
-
             print(" ")
             print("Please first load the data.")
-
         elif data_processed == True:
             print(" ")
             print(" Data already processed.")
-
         else:
-
             print(" ")
-
             print("****************")
             print('[{}]'.format(time()),"Performing Data Clean Up...")
             data = processData(data)
@@ -441,9 +440,7 @@ while True:
         elif data_processed == False:
             print(" ")
             print("Please process the data.")
-
         else:
-
             print(" ")
             print("Answering Questions")
             print("*******************")
@@ -456,7 +453,7 @@ while True:
             print('[{}]'.format(time()),"What severity is the most common in Virginia?")
             print('[{}]'.format(time()),Question4(data))
             print('[{}]'.format(time()),"What are the 5 cities that had the most accidents in 2019 in California?")
-            print('[{}]'.format(time()),(Question5(data)))
+            print('[{}]'.format(time()),Question5(data))
             print('[{}]'.format(time()),"What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021?")
             print('[{}]'.format(time()),Question6(data))
             print('[{}]'.format(time()),"What are the 3 most common weather conditions (weather_conditions) when accidents occurred?")
@@ -469,13 +466,62 @@ while True:
             print('[{}]'.format(time()),Question10(data))
 
     elif users_choice == 4:
-        print("True")
+        if data_loaded and data_processed:
+            print("Search Accidents by Location")
+            print("****************************")
+            state = input("Enter a State name: ")
+            city = input("Enter a City name: ")
+            zip = input("Enter a ZIP code: ")
+            print()
+            print("There were {} accidents".format(searchLocation(data,state,city,zip)))
+            print()
+            print("Time to perform search is: <wip>")
+            print()
+        elif not data_loaded and not data_processed:
+            print("Please load and process data first")
+        elif not data_loaded:
+            print("Please load data")
+        elif data_loaded and not data_processed:
+            print("Please process data first")
 
     elif users_choice == 5:
-        print("True")
+        if data_loaded and data_processed:
+            print("Search Accidents by Time")
+            print("************************")
+            year = input("Enter a year: ")
+            month = input("Enter a month: ")
+            day = input("Enter a day: ")
+            print()
+            print("There were <work in progress> accidents")
+            print()
+            print("Time to perform search is: <wip>")
+            print()
+        elif not data_loaded and not data_processed:
+            print("Please load and process data first")
+        elif not data_loaded:
+            print("Please load data")
+        elif data_loaded and not data_processed:
+            print("Please process data first")
 
     elif users_choice == 6:
-        print("True")
+        if data_loaded and data_processed:
+            print("Search Accidents by Condition")
+            print("*****************************")
+            minTemp = input("Enter a minimum temperature(F): ")
+            maxTemp = input("Enter a mximum temperature(F): ")
+            minVis = input("Enter a minimum visibility(mi): ")
+            maxVis = input("Enter a maximum visibility(mi): ")
+            print()
+            print("There were <work in progress> accidents")
+            print()
+            print("Time to perform search is: <wip>")
+            print()
+        elif not data_loaded and not data_processed:
+            print("Please load and process data first")
+        elif not data_loaded:
+            print("Please load data")
+        elif data_loaded and not data_processed:
+            print("Please process data first")
 
     elif users_choice == 7:
         break
