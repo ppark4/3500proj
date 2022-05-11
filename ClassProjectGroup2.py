@@ -50,12 +50,15 @@
 
 # imports pandas, a useful data science library
 import csv
+import time
 import pandas as pd
 import numpy as np
 from datetime import date
 import datetime
 from datetime import datetime
+from timeit import default_timer as timer
 
+startofcode = timer()
 # initialize empty dataframe
 data = pd.DataFrame()
 
@@ -63,7 +66,7 @@ data = pd.DataFrame()
 file = "test_data.csv"
 
 # current time
-def time():
+def ctime():
     currentTime = datetime.utcnow().strftime('%H:%M:%S.%f')[:-2]
     return currentTime
 
@@ -352,21 +355,53 @@ def searchLocation(data,state,city,zip):
         locData = locData[locData["City"] == city]
     if zip != "":
         locData = locData[locData["Zipcode"] == zip]
-    return locData
-    #return locData.shape[0]
+
+    if locData.empty:
+        return "0"
+    else:
+        return locData.shape[0]
 
 def searchTime(data,year,month,day):
     timeData = data
+    timeData['year'] = pd.DatetimeIndex(timeData['Start_Time']).year
+    timeData['month'] = pd.DatetimeIndex(timeData['Start_Time']).month
+    timeData['day'] = pd.DatetimeIndex(timeData['Start_Time']).day
+
     if year != "":
-        timeData = timeData[timeData[""] == year]
+        year = int(year)
+        timeData = timeData[timeData["year"] == year]
     if month != "":
-        timeData = timeData[timeData["City"] == month]
+        month = int(month)
+        timeData = timeData[timeData["month"] == month]
     if day != "":
-        timeData = timeData[timeData["Zipcode"] == day]
-    return timeData
+        day = int(day)
+        timeData = timeData[timeData["day"] == day]
+
+    if timeData.empty:
+        return "0"
+    else:
+        return timeData.shape[0]
 
 def searchConditions(data,mintemp,maxtemp,minvis,maxvis):
-    print()
+    conData = data
+    
+    if mintemp != "":
+        mintemp = float(mintemp)
+        conData = conData[conData["Temperature(F)"] >= mintemp]
+    if maxtemp != "":
+        maxtemp = float(maxtemp)
+        conData = conData[conData["Temperature(F)"] <= maxtemp]
+    if minvis != "":
+        minvis = float(minvis)
+        conData = conData[conData["Visibility(mi)"] >= minvis]
+    if maxvis != "":
+        maxvis = float(maxvis)
+        conData = conData[conData["Visibility(mi)"] <= maxvis]
+    
+    if conData.empty:
+        return "0"
+    else:
+        return conData.shape[0]
 
 
 # Flags for error handling
@@ -401,15 +436,17 @@ while True:
             print("Data already loaded.")
         else:
             print()
+            start = time.time()
             print("****************")
-            print('[{}] Starting script...'.format(time()))
+            print('[{}] Starting script...'.format(ctime()))
             # reads file
             data = loadData(file)
-            print('[{}]'.format(time()),'Loading "{}"...'.format(file))
-            print('[{}]'.format(time()),"Total Columns Read:",data.shape[1])
-            print('[{}]'.format(time()),"Total Rows Read:",data.shape[0])
+            print('[{}]'.format(ctime()),'Loading "{}"...'.format(file))
+            print('[{}]'.format(ctime()),"Total Columns Read:",data.shape[1])
+            print('[{}]'.format(ctime()),"Total Rows Read:",data.shape[0])
             print()
-            print("Time to load is: <work in progress>")
+            end = time.time()
+            print("Time to process is: %s seconds" % (time.time() - start))
             print("****************")
             data_loaded = True
 
@@ -422,13 +459,15 @@ while True:
             print(" ")
             print(" Data already processed.")
         else:
+            start = time.time()
             print(" ")
             print("****************")
-            print('[{}]'.format(time()),"Performing Data Clean Up...")
+            print('[{}]'.format(ctime()),"Performing Data Clean Up...")
             data = processData(data)
-            print('[{}]'.format(time()),"Total Rows Read after cleaning:", data.shape[0])
+            print('[{}]'.format(ctime()),"Total Rows Read after cleaning:", data.shape[0])
             print()
-            print("Time to process is: <work in progress>")
+            end = time.time()
+            print("Time to process is: %s seconds" % (time.time() - start))
             print("****************")
             data_processed = True
 
@@ -444,27 +483,26 @@ while True:
             print(" ")
             print("Answering Questions")
             print("*******************")
-            print('[{}]'.format(time()),"In what month were there more accidents reported?")
-            print('[{}]'.format(time()),Question1(data))
-            print('[{}]'.format(time()),"What is the state that had the most accidents in 2020?")
-            print('[{}]'.format(time()),Question2(data))
-            print('[{}]'.format(time()),"What is the state that had the most accidents of severity 2 in 2021?")
-            print('[{}]'.format(time()),Question3(data))
-            print('[{}]'.format(time()),"What severity is the most common in Virginia?")
-            print('[{}]'.format(time()),Question4(data))
-            print('[{}]'.format(time()),"What are the 5 cities that had the most accidents in 2019 in California?")
-            print('[{}]'.format(time()),Question5(data))
-            print('[{}]'.format(time()),"What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021?")
-            print('[{}]'.format(time()),Question6(data))
-            print('[{}]'.format(time()),"What are the 3 most common weather conditions (weather_conditions) when accidents occurred?")
-            print('[{}]'.format(time()),Question7(data))
-            print('[{}]'.format(time()),"What was the maximum visibility of all accidents of severity 2 that occurred in the state of New Hampshire?")
-            print('[{}]'.format(time()),Question8(data))
-            print('[{}]'.format(time()),"How many accidents of each severity were recorded in Bakersfield?")
-            print('[{}]'.format(time()),Question9(data))
-            print('[{}]'.format(time()),"What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2020?")
-            print('[{}]'.format(time()),Question10(data))
-
+            print('[{}]'.format(ctime()),"In what month were there more accidents reported?")
+            print('[{}]'.format(ctime()),Question1(data))
+            print('[{}]'.format(ctime()),"What is the state that had the most accidents in 2020?")
+            print('[{}]'.format(ctime()),Question2(data))
+            print('[{}]'.format(ctime()),"What is the state that had the most accidents of severity 2 in 2021?")
+            print('[{}]'.format(ctime()),Question3(data))
+            print('[{}]'.format(ctime()),"What severity is the most common in Virginia?")
+            print('[{}]'.format(ctime()),Question4(data))
+            print('[{}]'.format(ctime()),"What are the 5 cities that had the most accidents in 2019 in California?")
+            print('[{}]'.format(ctime()),Question5(data))
+            print('[{}]'.format(ctime()),"What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021?")
+            print('[{}]'.format(ctime()),Question6(data))
+            print('[{}]'.format(ctime()),"What are the 3 most common weather conditions (weather_conditions) when accidents occurred?")
+            print('[{}]'.format(ctime()),Question7(data))
+            print('[{}]'.format(ctime()),"What was the maximum visibility of all accidents of severity 2 that occurred in the state of New Hampshire?")
+            print('[{}]'.format(ctime()),Question8(data))
+            print('[{}]'.format(ctime()),"How many accidents of each severity were recorded in Bakersfield?")
+            print('[{}]'.format(ctime()),Question9(data))
+            print('[{}]'.format(ctime()),"What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2020?")
+            print('[{}]'.format(ctime()),Question10(data))
     elif users_choice == 4:
         if data_loaded and data_processed:
             print("Search Accidents by Location")
@@ -473,9 +511,11 @@ while True:
             city = input("Enter a City name: ")
             zip = input("Enter a ZIP code: ")
             print()
+            start = time.time()
             print("There were {} accidents".format(searchLocation(data,state,city,zip)))
+            end = time.time()
             print()
-            print("Time to perform search is: <wip>")
+            print("Time to perform search is: %s seconds" % (time.time() - start))
             print()
         elif not data_loaded and not data_processed:
             print("Please load and process data first")
@@ -492,9 +532,11 @@ while True:
             month = input("Enter a month: ")
             day = input("Enter a day: ")
             print()
-            print("There were <work in progress> accidents")
+            start = time.time()
+            print("There were {} accident(s)".format(searchTime(data,year,month,day)))
+            end = time.time()
             print()
-            print("Time to perform search is: <wip>")
+            print("Time to perform search is: %s seconds" % (time.time() - start))
             print()
         elif not data_loaded and not data_processed:
             print("Please load and process data first")
@@ -508,13 +550,15 @@ while True:
             print("Search Accidents by Condition")
             print("*****************************")
             minTemp = input("Enter a minimum temperature(F): ")
-            maxTemp = input("Enter a mximum temperature(F): ")
+            maxTemp = input("Enter a maximum temperature(F): ")
             minVis = input("Enter a minimum visibility(mi): ")
             maxVis = input("Enter a maximum visibility(mi): ")
             print()
-            print("There were <work in progress> accidents")
+            start = time.time()
+            print("There were {} accident(s)".format(searchConditions(data,minTemp,maxTemp,minVis,maxVis)))
+            end = time.time()
             print()
-            print("Time to perform search is: <wip>")
+            print("Time to perform search is: %s seconds" % (time.time() - start))
             print()
         elif not data_loaded and not data_processed:
             print("Please load and process data first")
@@ -524,6 +568,8 @@ while True:
             print("Please process data first")
 
     elif users_choice == 7:
+        endofcode = timer()
+        print("Total Running Time: %s Minutes" % ((endofcode - startofcode)/60))
         break
 
     else:
