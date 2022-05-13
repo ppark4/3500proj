@@ -275,6 +275,7 @@ months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUS
 abbrevMonths = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 
 # helper & validation functions
+# checks if state input is an actual state (full state name or abbrev)
 def validateState(state):
     cleanState = state.upper()
     if cleanState in states or state in abbrev:
@@ -282,6 +283,7 @@ def validateState(state):
     else:
         return False
 
+# formats the state input and returns the abbreviated name
 def stateHelper(state):
     cleanState = state.upper()
     if state == "":
@@ -291,18 +293,21 @@ def stateHelper(state):
     else:
         return abbrev[abbrev.index(cleanState)]
 
+# checks if zip code contains only digits and a length of 5 characters
 def validateZip(zip):
     if zip.isdigit() and len(zip) == 5:
         return True
     else:
         return False
 
+# validates if year is > 0
 def validateYear(year):
     if year.isdigit() and int(year) >= 0 or year == "":
         return True
     else:
         return False
 
+# checks if the month input is valid
 def validateMonth(month):
     if month.isdigit() and int(month) >= 1 and int(month) <= 12 or month == "":
         return True
@@ -317,6 +322,7 @@ def validateMonth(month):
     else:
         return False
 
+# formats the month input and returns the month number
 def monthHelper(month):
     cleanMonth = month.upper()
     if month == "":
@@ -330,12 +336,14 @@ def monthHelper(month):
     else:
         return month
 
+# validates if input is a valid day of the month (1-31)
 def validateDay(day):
     if year.isdigit() and int(day) >= 1 and int(day) <= 31 or day == "":
         return True
     else:
         return False
 
+# generic number validation for humidity and temperature
 def validateNum(num):
     if num.isdigit():
         return True
@@ -343,6 +351,7 @@ def validateNum(num):
         return False
 
 # Search functions
+# search accidents by specifying location 
 def searchLocation(data,state,city,zip):
     state = state.upper()
     city = city.capitalize()
@@ -359,6 +368,7 @@ def searchLocation(data,state,city,zip):
     else:
         return locData.shape[0]
 
+# search accidents by specifying date
 def searchDate(data,year,month,day):
     timeData = data
     timeData['year'] = pd.DatetimeIndex(timeData['Start_Time']).year
@@ -380,6 +390,7 @@ def searchDate(data,year,month,day):
     else:
         return timeData.shape[0]
 
+# search accidents by specifying weather 
 def searchConditions(data,mintemp,maxtemp,minvis,maxvis):
     conData = data
     
