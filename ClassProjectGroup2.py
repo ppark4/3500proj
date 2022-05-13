@@ -9,45 +9,6 @@
 # Student 4: Juan Sierra Diaz
 ################################
 
-######### to-do list ###########
-# data cleaning: --> DONE!
-# 1. DONE - load csv file and store in array/dataframe
-# 2. DONE - eliminate rows with missing data in..(see prompt)
-# 3. DONE - eliminate rows with empty values in 3 or more columns
-# 4. DONE - eliminate rows with distance zero 
-# 5. DONE - only consider in your analysis the first 5 digits of the zip
-# 6. DONE - eliminate? rows that lasted no time (endtime - starttime = 0)
-#
-# functions:
-# ** general issue: tiebreakers return only 1 value instead of all tied values
-# 1. DONE - what month were there more accidents reported?
-# 2. DONE - what state had most accidents in 2020?
-# 3. DONE - what state had most accidents with severity 2 in 2021?
-# 4. DONE - what severity is most common in Virginia?
-# 5. DONE(issue: extra return value) - are the 5 cities that had the most accidents in 2019 in CA?
-# 6. DONE - what was the avg humidity and avg temp of all accidents of severity 4 in 2021?
-# 7. DONE(issue: formatting) - what are the 3 most common weather conditions when accidents occured?
-# 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
-# 9. DONE(issue: formatting) how many accidents of each severity were recorded in bakersfield?
-# 10. DONE - what was the longest accident (in hours) recorded in florida in spring (mar, apr, may) of 2020?
-#
-# runtimes:
-# ** to print current time, use: 
-# 		print('[{}] type something here'.format(time()))
-# 			--outputs--> "[12:41:34.4949] type something here"
-# 1. DONE - Function that returns current time
-# 2. IN PROGRESS - Function that returns total runtime
-#
-# user interface:
-# 1. DONE - Load data 
-# 2. DONE - Process data
-# 3. Answering questions
-# 4. Search accidents by city, state, zip
-# 5. Search accidents by year, month, day
-# 6. Search accidents by temperature, range, visibility
-# 7. DONE - Quit
-###############################
-
 # imports pandas, a useful data science library
 import csv
 import time
@@ -59,11 +20,12 @@ from datetime import datetime
 from timeit import default_timer as timer
 
 startofcode = timer()
+
 # initialize empty dataframe
 data = pd.DataFrame()
 
 # filename
-file = "test_data.csv"
+file = "US_Accidents_data.csv"
 
 # current time
 def ctime():
@@ -98,8 +60,6 @@ def processData(dataObj):
     # resets index numbers, this should be the second to last thing called (last statement should be print)
     data.reset_index(drop=True,inplace=True)
 
-    data.to_csv('sfoo.csv')
-
     return data
 
 # 1. what month were there more accidents reported?
@@ -107,15 +67,11 @@ def Question1(data):
 
     # Create an extra column with each indivual month
     data['month'] = pd.DatetimeIndex(data['Start_Time']).month
-    
+
     # Get the most frequent month
     # The most frequent month should be the month with most accidents
     month_num = data['month'].value_counts().idxmax()
-
-
     month_num = str(month_num)
-
-
     datetime_object = datetime.strptime(month_num, "%m")
 
     # Convert the month number to the full month name
@@ -217,7 +173,7 @@ def Question6(data):
         temperature_ave = temperature_sum/length_tem
 
         # Formating the output
-        result = "Average Humidity: " + str(round(humidity_ave,2)) + " %, " + "Average Temperature: " + str(round(temperature_ave,2)) + "F"
+        result = "Average Humidity: " + str(round(humidity_ave,2)) + "%, " + "Average Temperature: " + str(round(temperature_ave,2)) + " F"
 
         return result
 
@@ -242,12 +198,9 @@ def Question7(data):
         return result
 
 
-
-
 # 8. what was the maximum visibility of all accidents of severity 2 in new hampshire?
 def Question8(data):
 
-    
     # Filter data with accidents of New Hampshire with severity 2 
     data_severity_2_NH = data[(data['Severity'] == 2) & (data['State'] == 'NH')]
 
@@ -298,7 +251,6 @@ def Question10(data):
     data['Start_Time'] = pd.to_datetime(data['Start_Time'], errors='coerce')
     data['End_Time'] = pd.to_datetime(data['End_Time'], errors='coerce')
 
-
     # Coverting duration to hours
     data['Duration'] = (data['End_Time'] - data['Start_Time']).dt.total_seconds() / 60 / 60
 
@@ -316,8 +268,84 @@ def Question10(data):
             longest_accident = data_florida_spring['Duration'].max()
             return longest_accident
 
+# list of states and months and their abbreviations
+states = ["ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA", "COLORADO", "CONNECTICUT", "DELAWARE", "FLORIDA", "GEORGIA", "HAWAII", "IDAHO", "ILLINOIS", "INDIANA", "IOWA", "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND", "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", "MISSOURI", "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE", "NEW JERSEY", "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", "NORTH DAKOTA", "OHIO", "OKLAHOMA", "OREGON", "PENNSYLVANIA", "RHODE ISLAND", "SOUTH CAROLINA", "SOUTH DAKOTA", "TENNESSEE", "TEXAS", "UTAH", "VERMONT", "VIRGINIA", "WASHINGTON", "WEST VIRGINIA", "WISCONSIN", "WYOMING"]
+abbrev = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
+abbrevMonths = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+
+# helper & validation functions
+def validateState(state):
+    cleanState = state.upper()
+    if cleanState in states or state in abbrev:
+        return True
+    else:
+        return False
+
+def stateHelper(state):
+    cleanState = state.upper()
+    if state == "":
+        return state
+    elif cleanState in states:
+        return abbrev[states.index(cleanState)]
+    else:
+        return abbrev[abbrev.index(cleanState)]
+
+def validateZip(zip):
+    if zip.isdigit() and len(zip) == 5:
+        return True
+    else:
+        return False
+
+def validateYear(year):
+    if year.isdigit() and int(year) >= 0 or year == "":
+        return True
+    else:
+        return False
+
+def validateMonth(month):
+    if month.isdigit() and int(month) >= 1 and int(month) <= 12 or month == "":
+        return True
+    elif month.isalpha():
+        cleanMonth = month.upper()
+        if cleanMonth in months:
+            return True
+        elif cleanMonth in abbrevMonths:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def monthHelper(month):
+    cleanMonth = month.upper()
+    if month == "":
+        return month
+    elif cleanMonth == "SEPT":
+        return "9"
+    elif cleanMonth in months:
+        return str(months.index(cleanMonth)+1)
+    elif cleanMonth in abbrevMonths:
+        return str(abbrevMonths.index(cleanMonth)+1)
+    else:
+        return month
+
+def validateDay(day):
+    if year.isdigit() and int(day) >= 1 and int(day) <= 31 or day == "":
+        return True
+    else:
+        return False
+
+def validateNum(num):
+    if num.isdigit():
+        return True
+    else:
+        return False
+
 # Search functions
 def searchLocation(data,state,city,zip):
+    state = state.upper()
+    city = city.capitalize()
     locData = data
     if state != "":
         locData = locData[locData["State"] == state]
@@ -331,7 +359,7 @@ def searchLocation(data,state,city,zip):
     else:
         return locData.shape[0]
 
-def searchTime(data,year,month,day):
+def searchDate(data,year,month,day):
     timeData = data
     timeData['year'] = pd.DatetimeIndex(timeData['Start_Time']).year
     timeData['month'] = pd.DatetimeIndex(timeData['Start_Time']).month
@@ -472,17 +500,23 @@ while True:
             print('[{}]'.format(ctime()),"How many accidents of each severity were recorded in Bakersfield?")
             print('[{}]'.format(ctime()),Question9(data))
             print('[{}]'.format(ctime()),"What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2020?")
-            print('[{}]'.format(ctime()),Question10(data))
+            print('[{}]'.format(ctime()),round(Question10(data),4))
     elif users_choice == 4:
         if data_loaded and data_processed:
             print("Search Accidents by Location")
             print("****************************")
-            state = input("Enter a State name: ")
+            state = input("Enter a State name or initials: ")
+            while validateState(state) == False and state != "":
+                print("Invalid State. Please try again.")
+                state = input("Enter a State name or initials: ")
             city = input("Enter a City name: ")
-            zip = input("Enter a ZIP code: ")
+            zip = input("Enter a 5-digit ZIP code: ")
+            while validateZip(zip) == False and zip != "":
+                print("Invalid Zip code. Please try again.")
+                zip = input("Enter a 5-digit ZIP code: ")
             print()
             start = time.time()
-            print("There were {} accidents".format(searchLocation(data,state,city,zip)))
+            print("There were {} accidents".format(searchLocation(data,stateHelper(state),city,zip)))
             end = time.time()
             print()
             print("Time to perform search is: %s seconds" % (time.time() - start))
@@ -496,14 +530,23 @@ while True:
 
     elif users_choice == 5:
         if data_loaded and data_processed:
-            print("Search Accidents by Time")
+            print("Search Accidents by Date")
             print("************************")
             year = input("Enter a year: ")
+            while validateYear(year) == False and year != "":
+                print("Invalid year. Please try again.")
+                year = input("Enter a year: ")
             month = input("Enter a month: ")
+            while validateMonth(month) == False and month != "":
+                print("Invalid month. Please try again.")
+                month = input("Enter a month: ")
             day = input("Enter a day: ")
+            while validateDay(day) == False and day != "":
+                print("Invalid day. Please try again.")
+                day = input("Enter a day: ")
             print()
             start = time.time()
-            print("There were {} accident(s)".format(searchTime(data,year,month,day)))
+            print("There were {} accident(s)".format(searchDate(data,year,monthHelper(month),day)))
             end = time.time()
             print()
             print("Time to perform search is: %s seconds" % (time.time() - start))
@@ -520,9 +563,21 @@ while True:
             print("Search Accidents by Condition")
             print("*****************************")
             minTemp = input("Enter a minimum temperature(F): ")
+            while validateNum(minTemp) == False and minTemp != "":
+                print("Invalid value. Please try again.")
+                minTemp = input("Enter a minimum temperature(F): ")
             maxTemp = input("Enter a maximum temperature(F): ")
+            while validateNum(maxTemp) == False and maxTemp != "":
+                print("Invalid value. Please try again.")
+                maxTemp = input("Enter a maximum temperature(F): ")
             minVis = input("Enter a minimum visibility(mi): ")
+            while validateNum(minVis) == False and minVis != "":
+                print("Invalid value. Please try again.")
+                minVis = input("Enter a minimum visibility(mi): ")
             maxVis = input("Enter a maximum visibility(mi): ")
+            while validateNum(maxVis) == False and maxVis != "":
+                print("Invalid value. Please try again.")
+                maxVis = input("Enter a maximum visibility(mi): ")
             print()
             start = time.time()
             print("There were {} accident(s)".format(searchConditions(data,minTemp,maxTemp,minVis,maxVis)))
@@ -545,5 +600,3 @@ while True:
     else:
         print(" ")
         print("Please enter a valid Input from the menu.")
-
-#print(data)

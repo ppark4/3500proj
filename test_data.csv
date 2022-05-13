@@ -1,5 +1,5 @@
 ,ID,Severity,Start_Time,End_Time,Distance(mi),Description,Number,Street,Side,City,State,Zipcode,Country,Timezone,Weather_Timestamp,Temperature(F),Humidity(%),Pressure(in),Visibility(mi),Precipitation(in),Weather_Condition
-0,A-3,2,2016-02-08 06:15:39,2016-02-08 12:15:39,0.055,At I-71/US-50/Exit 1 - Accident.,,I-75 S,R,Cincinnati,OH,45203,US,US/Eastern,2016-02-08 05:53:00,36.0,97.0,29.7,10.0,0.02,Overcast
+0,A-3,2,2016-12-08 06:15:39,2016-02-08 12:15:39,0.055,At I-71/US-50/Exit 1 - Accident.,,I-75 S,R,Cincinnati,OH,45203,US,US/Eastern,2016-02-08 05:53:00,36.0,97.0,29.7,10.0,0.02,Overcast
 1,A-7,2,2016-02-08 08:15:41,2016-02-08 14:15:41,0.2269999999999999,At OH-4/Exit 54 - Accident.,,I-75 S,R,Dayton,OH,45404,US,US/Eastern,2016-02-08 08:18:00,33.8,100.0,29.63,3.0,,Mostly Cloudy
 2,A-11,2,2016-02-08 15:43:50,2016-02-08 21:43:50,0.307,At OH-4/Paddock Rd/Exit 9 - Accident.,,I-75 N,R,Cincinnati,OH,45216,US,US/Eastern,2016-02-08 15:47:00,33.8,100.0,29.66,3.0,0.03,Light Snow
 3,A-15,3,2016-02-08 18:11:11,2016-02-09 00:11:11,0.004,At Shipley Rd - Accident.,48999.0, Titus Rd,R,Freeport,OH,43973,US,US/Eastern,2016-02-08 18:23:00,33.1,92.0,29.62,10.0,,Mostly Cloudy
